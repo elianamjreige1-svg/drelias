@@ -1,1 +1,327 @@
 
+<!DOCTYPE html>
+<html>
+<head>
+<title>Patients Admin</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+
+body{
+    font-family: Arial;
+    background:#1e3c72;
+    margin:0;
+    padding:10px;
+    color:white;
+}
+
+.container{
+    max-width:1200px;
+    margin:auto;
+}
+
+section{
+    margin-bottom:25px;
+}
+
+input{
+    width:90%;
+    max-width:300px;
+    padding:12px;
+    margin:5px;
+    border:none;
+    border-radius:6px;
+    font-size:16px;
+}
+
+button{
+    padding:12px 16px;
+    margin:5px;
+    border:none;
+    border-radius:6px;
+    cursor:pointer;
+    font-size:15px;
+    background:#4CAF50;
+    color:white;
+}
+
+button:hover{
+    opacity:0.9;
+}
+
+.deleteBtn{
+    background:#e53935;
+}
+
+.table-container{
+    overflow-x:auto;
+}
+
+table{
+    width:100%;
+    min-width:800px;
+    background:white;
+    color:black;
+    border-collapse:collapse;
+}
+
+th,td{
+    border:1px solid #ccc;
+    padding:8px;
+    text-align:center;
+}
+
+td input{
+    width:95%;
+    padding:8px;
+    margin:0;
+}
+
+.filters{
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+    gap:10px;
+    margin-bottom:10px;
+}
+
+.filters input{
+    flex:1;
+    min-width:150px;
+}
+
+h1,h2{
+    margin-top:10px;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>Dr Elias Patients Admin Panel</h1>
+
+<section>
+
+<h2>Add Patient</h2>
+
+<input id="name" placeholder="Patient Name">
+
+<input id="dob" placeholder="Date Of Birth">
+
+<input id="tel" placeholder="Telephone Number" type="number">
+
+<br>
+
+<button onclick="addPatient()">Add Patient</button>
+
+</section>
+
+<section>
+
+<h2>Patients</h2>
+
+<div class="filters">
+
+<input id="filterId" placeholder="Filter by ID" onkeyup="filterPatients()">
+
+<input id="filterName" placeholder="Filter by Name" onkeyup="filterPatients()">
+
+<input id="filterDob" placeholder="Filter by DOB" onkeyup="filterPatients()">
+
+<input id="filterTel" placeholder="Filter by Tel" onkeyup="filterPatients()">
+
+<button onclick="loadPatients()">Refresh</button>
+
+</div>
+
+<div class="table-container">
+
+<table id="patients"></table>
+
+</div>
+
+</section>
+
+</div>
+
+<script>
+
+let allPatients = [];
+
+function renderPatients(data){
+
+    let html = `
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>DOB</th>
+        <th>Tel</th>
+        <th>Actions</th>
+    </tr>
+    `;
+
+    data.forEach(p => {
+
+        html += `
+        <tr>
+
+            <td>${p.id}</td>
+
+            <td>
+                <input id="name${p.id}" value="${p.name}">
+            </td>
+
+            <td>
+                <input id="dob${p.id}" value="${p.dob}">
+            </td>
+
+            <td>
+                <input id="tel${p.id}" value="${p.tel}">
+            </td>
+
+            <td>
+
+                <button onclick="updatePatient(${p.id})">
+                    Update
+                </button>
+
+                <button class="deleteBtn" onclick="deletePatient(${p.id})">
+                    Delete
+                </button>
+
+            </td>
+
+        </tr>
+        `;
+    });
+
+    document.getElementById("patients").innerHTML = html;
+}
+
+function loadPatients(){
+
+    fetch("/patients")
+    .then(res => res.json())
+    .then(data => {
+
+        allPatients = data;
+
+        renderPatients(data);
+
+    });
+}
+
+function addPatient(){
+
+    if(confirm("Add this patient?")){
+
+        fetch("/patients",{
+
+            method:"POST",
+
+            headers:{
+                "Content-Type":"application/json"
+            },
+
+            body:JSON.stringify({
+
+                name:document.getElementById("name").value,
+
+                dob:document.getElementById("dob").value,
+
+                tel:document.getElementById("tel").value
+
+            })
+
+        })
+        .then(() => {
+
+            document.getElementById("name").value = "";
+            document.getElementById("dob").value = "";
+            document.getElementById("tel").value = "";
+
+            loadPatients();
+
+        });
+
+    }
+
+}
+
+function updatePatient(id){
+
+    if(confirm("Update this patient?")){
+
+        fetch("/patients/"+id,{
+
+            method:"PUT",
+
+            headers:{
+                "Content-Type":"application/json"
+            },
+
+            body:JSON.stringify({
+
+                name:document.getElementById("name"+id).value,
+
+                dob:document.getElementById("dob"+id).value,
+
+                tel:document.getElementById("tel"+id).value
+
+            })
+
+        })
+        .then(loadPatients);
+
+    }
+
+}
+
+function deletePatient(id){
+
+    if(confirm("Delete this patient?")){
+
+        fetch("/patients/"+id,{
+            method:"DELETE"
+        })
+        .then(loadPatients);
+
+    }
+
+}
+
+function filterPatients(){
+
+    let id = document.getElementById("filterId").value.toLowerCase();
+
+    let name = document.getElementById("filterName").value.toLowerCase();
+
+    let dob = document.getElementById("filterDob").value.toLowerCase();
+
+    let tel = document.getElementById("filterTel").value.toLowerCase();
+
+    let filtered = allPatients.filter(p => {
+
+        return (
+            p.id.toString().includes(id) &&
+            p.name.toLowerCase().includes(name) &&
+            p.dob.toLowerCase().includes(dob) &&
+            p.tel.toString().includes(tel)
+        );
+
+    });
+
+    renderPatients(filtered);
+
+}
+
+loadPatients();
+
+</script>
+
+</body>
+</html>
