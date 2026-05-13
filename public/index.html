@@ -126,13 +126,9 @@ h1,h2{
 
 <div class="filters">
 
-<input id="filterId" placeholder="Filter by ID" onkeyup="filterPatients()">
-
-<input id="filterName" placeholder="Filter by Name" onkeyup="filterPatients()">
-
-<input id="filterDob" placeholder="Filter by DOB" onkeyup="filterPatients()">
-
-<input id="filterTel" placeholder="Filter by Tel" onkeyup="filterPatients()">
+<input id="searchAll"
+placeholder="Search by id, name, dob, tel..."
+onkeyup="filterPatients()">
 
 <button onclick="loadPatients()">Refresh</button>
 
@@ -296,27 +292,20 @@ function deletePatient(id){
 
 function filterPatients(){
 
-    let id = document.getElementById("filterId").value.toLowerCase();
-
-    let name = document.getElementById("filterName").value.toLowerCase();
-
-    let dob = document.getElementById("filterDob").value.toLowerCase();
-
-    let tel = document.getElementById("filterTel").value.toLowerCase();
+    let value = document.getElementById("searchAll").value.toLowerCase();
 
     let filtered = allPatients.filter(p => {
 
         return (
-            p.id.toString().includes(id) &&
-            p.name.toLowerCase().includes(name) &&
-            p.dob.toLowerCase().includes(dob) &&
-            p.tel.toString().includes(tel)
+            p.id.toString().includes(value) ||
+            (p.name || "").toLowerCase().includes(value) ||
+            (p.dob || "").toLowerCase().includes(value) ||
+            (p.tel || "").toString().includes(value)
         );
 
     });
 
     renderPatients(filtered);
-
 }
 
 loadPatients();
