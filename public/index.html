@@ -211,7 +211,10 @@ function loadPatients(){
 }
 
 function addPatient(){
-
+if(document.getElementById("name").value=="" || document.getElementById("dob").value=="" || document.getElementById("tel").value==""){
+    alert("Please fill all the fields");
+    return;
+}
     if(confirm("Add this patient?")){
 
         fetch("/patients",{
