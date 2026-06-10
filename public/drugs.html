@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Drugs Management</title>
+
+<style>
+
+body{
+    font-family:Arial;
+    background:#1e3c72;
+    color:white;
+    padding:20px;
+}
+
+.container{
+    max-width:1000px;
+    margin:auto;
+}
+
+input,button{
+    padding:10px;
+    margin:5px;
+    border-radius:6px;
+    border:none;
+}
+
+button{
+    cursor:pointer;
+}
+
+table{
+    width:100%;
+    background:white;
+    color:black;
+    border-collapse:collapse;
+    margin-top:20px;
+}
+
+th,td{
+    border:1px solid #ccc;
+    padding:8px;
+    text-align:center;
+}
+
+.actions button{
+    margin:2px;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>Drugs Management</h1>
+
+<h3>Add / Edit Drug</h3>
+
+<input id="name" placeholder="Drug Name">
+<input id="qty" type="number" placeholder="Quantity">
+<input id="price" type="number" placeholder="Unit Price">
+
+<button onclick="saveDrug()">Save Drug</button>
+
+<br><br>
+
+<input id="search" placeholder="Search drug..." onkeyup="loadDrugs()">
+
+<table id="drugsTable"></table>
+
+</div>
+
+<script>
+
+let editingId = null;
+
+// LOAD DRUGS
+function loadDrugs(){
+
+    let q = document.getElementById("search").value;
+
+    fetch("/drugs?name=" + q)
+    .then(r=>r.json())
+    .then(data=>{
+
+        let html = `
+        <tr>
+            <th>Name</th>
+            <th>Qty</th>
+            <th>Price</th>
+            <th>Actions</th>
+        </tr>
+        `;
+
+        data.forEach(d=>{
+
+            html += `
+            <tr>
+                <td>${d.name}</td>
+                <td>${d.quantity}</td>
+                <td>$${d.price}</td>
+                <td class="actions">
+
+                    <button onclick="editDrug(${d.id},'${d.name}',${d.quantity},${d.price})">
+                        Edit
+                    </button>
+
+                    <button onclick="deleteDrug(${d.id})">
+                        Delete
+                    </button>
+
+                </td>
+            </tr>
+            `;
+        });
+
+        document.getElementById("drugsTable").innerHTML = html;
+
+    });
+
+}
+
+// SAVE (ADD OR UPDATE)
+function saveDrug(){
+
+    let name = document.getElementById("name").value;
+    let qty = document.getElementById("qty").value;
+    let price = document.getElementById("price").value;
+
+    if(!name || !qty || !price){
+        alert("Fill all fields");
+        return;
+    }
+
+    let url = editingId ? "/drugs/" + editingId : "/drugs";
+    let method = editingId ? "PUT" : "POST";
+
+    fetch(url,{
+        method:method,
+        headers:{
+            "Content-Type":"application/json"
+        },
+        body:JSON.stringify({
+            name,
+            quantity:qty,
+            price
+        })
+    })
+    .then(()=>{
+
+        document.getElementById("name").value="";
+        document.getElementById("qty").value="";
+        document.getElementById("price").value="";
+
+        editingId = null;
+
+        loadDrugs();
+
+    });
+
+}
+
+// EDIT
+function editDrug(id,name,qty,price){
+
+    editingId = id;
+
+    document.getElementById("name").value = name;
+    document.getElementById("qty").value = qty;
+    document.getElementById("price").value = price;
+
+}
+
+// DELETE
+function deleteDrug(id){
+
+    if(!confirm("Delete this drug?")) return;
+
+    fetch("/drugs/"+id,{
+        method:"DELETE"
+    })
+    .then(loadDrugs);
+
+}
+
+loadDrugs();
+
+</script>
+
+</body>
+</html>
