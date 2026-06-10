@@ -177,11 +177,11 @@ function renderPatients(data){
             <td>
                 <input id="tel${p.id}" value="${p.tel}">
             </td>
-<td><button onclick="drugandinvoice(${p.id})">
-                    Drug & Invoice
-                </button></td>
-            <td>
 
+            <td>
+<button onclick="drugandinvoice(${p.id})">
+                    Drug & Invoice
+                </button>
                 <button onclick="updatePatient(${p.id})">
                     Save Info
                 </button>
