@@ -624,9 +624,9 @@ function changeQty(index,value){
         "Cannot exceed stock"
         );
 
-        value =
+     /*   value =
         invoiceItems[index].stock;
-
+*/
     }
 
     invoiceItems[index].qty =
@@ -667,9 +667,12 @@ function validateStock(){
     
     async function generatePDF(){
   // 🚨 STOP IF STOCK INVALID
-    if(!validateStock()){
-        return; // <-- THIS is the most important line
+   const isValid = validateStock();
+
+    if(!isValid){
+        return; // ❌ NO CONFIRMATION WILL EVER SHOW
     }
+
 
 const ok = confirm("Are you sure you want to generate the invoice and update stock?");
 
