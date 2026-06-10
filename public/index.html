@@ -253,6 +253,11 @@ let allPatients = [];
 
 function renderPatients(data){
 
+ if(!data || data.length === 0){
+        document.getElementById("patients").innerHTML = "";
+        return;
+    }
+    
     let html = `
     <tr>
         <th>Patient Number</th>
@@ -424,6 +429,29 @@ function deletePatient(id){
 
 function filterPatients(){
 
+    let value = document.getElementById("searchAll").value.trim().toLowerCase();
+
+    // إذا search فاضي → ما تعرض شي
+    if(value === ""){
+        document.getElementById("patients").innerHTML = "";
+        return;
+    }
+
+    let filtered = allPatients.filter(p => {
+        return (
+            p.id.toString().includes(value) ||
+            (p.name || "").toLowerCase().includes(value) ||
+            (p.dob || "").toLowerCase().includes(value) ||
+            (p.tel || "").toString().includes(value)
+        );
+    });
+
+    renderPatients(filtered);
+}
+
+/*
+function filterPatients(){
+
     let value = document.getElementById("searchAll").value.toLowerCase();
 
     let filtered = allPatients.filter(p => {
@@ -439,8 +467,8 @@ function filterPatients(){
 
     renderPatients(filtered);
 }
-
-loadPatients();
+*/
+//loadPatients();
 
 
     function drugandinvoice(id,name){
