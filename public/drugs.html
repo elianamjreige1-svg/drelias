@@ -112,14 +112,18 @@ td input{
 }
 
 .actions button{
-    flex:0 0 auto;      /* 🚫 prevents stretching */
+    flex:0 0 auto;
     white-space:nowrap;
-    padding:6px 10px;
-    font-size:12px;
+    
+    padding:10px 14px;   /* 👈 bigger clickable area */
+    font-size:14px;      /* 👈 bigger text */
     border:none;
-    border-radius:5px;
+    border-radius:6px;
     cursor:pointer;
     color:white;
+
+    min-height:38px;     /* 👈 ensures good height */
+    line-height:1;       /* keeps text centered */
 }
 
 .saveBtn{
@@ -141,9 +145,10 @@ td input{
         flex-wrap:nowrap;   /* KEEP INLINE even on mobile */
     }
 
-    .actions button{
-        width:auto;         /* 🚫 NOT 100% */
-        flex:0 0 auto;
+   .actions button{
+        padding:12px 14px;
+        font-size:14px;
+        min-height:42px;
     }
 }
 
