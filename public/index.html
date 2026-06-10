@@ -664,7 +664,7 @@ function validateStock(){
 
     return true;
 }
-    
+/*    
     async function generatePDF(){
   // 🚨 STOP IF STOCK INVALID
    const isValid = validateStock();
@@ -733,12 +733,7 @@ y += 10;
 
 // ADD DATE
 const today = new Date();
-/*
-const formattedDate =
-    today.getDate() + "/" +
-    (today.getMonth() + 1) + "/" +
-    today.getFullYear();
-*/
+
 const formattedDate = new Date().toLocaleDateString("en-GB");
 pdf.setFontSize(12);
 pdf.text("Date: " + formattedDate, 20, y);
@@ -824,8 +819,157 @@ y += 10;
 
     closeInvoice();
 
+}*/
+
+async function generatePDF(){
+
+    // ===== STOCK VALIDATION FIRST =====
+    if(!validateStock()){
+        return;
+    }
+
+    const ok = confirm("Generate invoice and update stock?");
+    if(!ok){
+        return;
+    }
+
+    // ===== UPDATE STOCK FIRST =====
+    const response = await fetch("/deductStock", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ items: invoiceItems })
+    });
+
+    if(!response.ok){
+        alert(await response.text());
+        return;
+    }
+
+    // ===== PDF INIT =====
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF();
+
+    const pageWidth = pdf.internal.pageSize.getWidth();
+
+    // ===== INVOICE NUMBER =====
+    const invoiceNumber =
+        "INV-" + Date.now().toString().slice(-6);
+
+    // ===== TITLE (BIG + BOLD) =====
+    pdf.setFontSize(24);
+    pdf.setFont("helvetica", "bold");
+
+    pdf.text("Dr Elias Invoice", pageWidth / 2, 15, {
+        align: "center"
+    });
+
+    pdf.line(20, 18, pageWidth - 20, 18);
+
+    // ===== DATE (RIGHT ALIGNED) =====
+    const formattedDate = new Date().toLocaleDateString("en-GB");
+
+    pdf.setFontSize(11);
+    pdf.setFont("helvetica", "normal");
+
+    pdf.text("Date: " + formattedDate, pageWidth - 20, 25, {
+        align: "right"
+    });
+
+    // ===== INVOICE NUMBER =====
+    pdf.text("Invoice #: " + invoiceNumber, 20, 25);
+
+    // ===== PATIENT =====
+    pdf.setFontSize(13);
+    pdf.setFont("helvetica", "bold");
+    pdf.text("Patient: " + selectedPatientName, 20, 35);
+
+    // ===== CALCULATE DRUGS TOTAL =====
+    let drugsTotal = 0;
+
+    const tableData = invoiceItems.map(item => {
+        const total = item.price * item.qty;
+        drugsTotal += total;
+
+        return [
+            item.name,
+            item.qty,
+            `$${item.price.toFixed(2)}`,
+            `$${total.toFixed(2)}`
+        ];
+    });
+
+    // ===== DRUGS TOTAL INSIDE TABLE =====
+    tableData.push([
+        { 
+            content: "Drugs Total",
+            colSpan: 3,
+            styles: {
+                halign: "right",
+                fontStyle: "bold"
+            }
+        },
+        `$${drugsTotal.toFixed(2)}`
+    ]);
+
+    // ===== TABLE =====
+    pdf.autoTable({
+        startY: 45,
+        head: [["Drug", "Qty", "Price", "Total"]],
+        body: tableData,
+        theme: "grid",
+        headStyles: {
+            fillColor: [30, 60, 114],
+            textColor: 255,
+            fontStyle: "bold"
+        },
+        styles: {
+            fontSize: 11,
+            cellPadding: 3
+        }
+    });
+
+    // ===== FINAL TOTALS =====
+    let y = pdf.lastAutoTable.finalY + 10;
+
+    const consultation =
+        Number(document.getElementById("consultationFee").value) || 0;
+
+    const discount =
+        Number(document.getElementById("discount").value) || 0;
+
+    pdf.setFontSize(11);
+    pdf.setFont("helvetica", "normal");
+
+    pdf.text(`Consultation: $${consultation.toFixed(2)}`, 20, y);
+    y += 7;
+
+    pdf.text(`Discount: $${discount.toFixed(2)}`, 20, y);
+    y += 10;
+
+    pdf.setFontSize(14);
+    pdf.setFont("helvetica", "bold");
+
+    pdf.text(
+        `TOTAL: $${(drugsTotal + consultation - discount).toFixed(2)}`,
+        20,
+        y
+    );
+
+    // ===== PRINT BUTTON (opens print dialog) =====
+    const blob = pdf.output("blob");
+    const url = URL.createObjectURL(blob);
+
+    const printWindow = window.open(url);
+
+    printWindow.onload = function () {
+        printWindow.print();
+    };
+
+    // ===== SAVE FILE =====
+    pdf.save(invoiceNumber + ".pdf");
+
+    closeInvoice();
 }
-    
     
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
