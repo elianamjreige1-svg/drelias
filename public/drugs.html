@@ -34,6 +34,7 @@ table{
     color:black;
     border-collapse:collapse;
     margin-top:20px;
+    min-width:600px;
 }
 
 th,td{
@@ -42,10 +43,27 @@ th,td{
     text-align:center;
 }
 
+    .table-wrapper{
+    overflow-x:auto;
+    margin-top:15px;
+}
 .actions button{
     margin:2px;
 }
 
+
+    @media (max-width:768px){
+
+    input, button{
+        width:100%;
+        box-sizing:border-box;
+    }
+
+    .actions button{
+        width:100%;
+        margin:3px 0;
+    }
+}
 </style>
 </head>
 
