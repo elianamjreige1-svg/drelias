@@ -255,14 +255,7 @@ function addDrug(){
         return;
     }
 
-  // 🚨 CHECK EXISTING IN CURRENT TABLE
-    let existingNames = Array.from(document.querySelectorAll("#drugsTable tr td input[id^='name']"))
-        .map(input => input.value.trim().toLowerCase());
-
-    if(existingNames.includes(name)){
-        alert("Drug already exists!");
-        return;
-    }
+  
    
     
     fetch("/drugs",{
@@ -276,7 +269,13 @@ function addDrug(){
             price
         })
     })
-    .then(() => {
+    .then(async (res) => {
+
+         if (!res.ok) {
+        const msg = await res.text(); // "Drug already exists"
+        alert(msg);
+        return;
+    }
 
         document.getElementById("name").value="";
         document.getElementById("qty").value="";
