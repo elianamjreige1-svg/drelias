@@ -119,7 +119,7 @@ app.delete("/patients/:id", async (req, res) => {
     res.send("ok");
 });
 
-
+/*
 app.get("/drugs", async (req,res)=>{
 
     const drugs = await query(
@@ -127,6 +127,34 @@ app.get("/drugs", async (req,res)=>{
     );
 
     res.json(drugs);
+
+});*/
+
+app.get("/drugs", async (req, res) => {
+
+    try {
+
+        const { name } = req.query;
+
+        let sql = "SELECT * FROM drugs WHERE 1=1";
+        let params = [];
+
+        // SEARCH by name (optional)
+        if (name && name.trim() !== "") {
+            sql += " AND name LIKE ?";
+            params.push("%" + name.trim() + "%");
+        }
+
+        sql += " ORDER BY name ASC";
+
+        const drugs = await query(sql, params);
+
+        res.json(drugs);
+
+    } catch (err) {
+        console.error("GET /drugs error:", err);
+        res.status(500).send("Server error");
+    }
 
 });
 
@@ -175,6 +203,43 @@ app.post("/deductStock", async (req,res)=>{
 
 });
 
+
+app.post("/drugs", async (req,res)=>{
+
+    const { name, quantity, price } = req.body;
+
+    await query(
+        "INSERT INTO drugs (name, quantity, price) VALUES (?,?,?)",
+        [name, quantity, price]
+    );
+
+    res.send("ok");
+});
+
+app.put("/drugs/:id", async (req,res)=>{
+
+    const { id } = req.params;
+    const { name, quantity, price } = req.body;
+
+    await query(
+        "UPDATE drugs SET name=?, quantity=?, price=? WHERE id=?",
+        [name, quantity, price, id]
+    );
+
+    res.send("ok");
+});
+
+app.delete("/drugs/:id", async (req,res)=>{
+
+    const { id } = req.params;
+
+    await query(
+        "DELETE FROM drugs WHERE id=?",
+        [id]
+    );
+
+    res.send("ok");
+});
 
 const PORT = process.env.PORT || 3000;
 
