@@ -208,7 +208,7 @@ app.post("/drugs", async (req,res)=>{
 
       const { name, quantity, price } = req.body;
 
-    const existing = await db.query(
+    const existing = await query(
         "SELECT * FROM drugs WHERE LOWER(name) = LOWER(?)",
         [name]
     );
