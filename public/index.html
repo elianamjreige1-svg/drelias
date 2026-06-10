@@ -85,7 +85,20 @@ td input{
     gap:10px;
     margin-bottom:10px;
 }
+.action-buttons{
+    display:flex;
+    flex-direction:row;
+    flex-wrap:nowrap;
+    gap:4px;
+    justify-content:center;
+}
 
+.action-buttons button{
+    white-space:nowrap;
+    padding:6px 8px;
+    font-size:12px;
+    margin:0;
+}
 .filters input{
     flex:1;
     min-width:150px;
@@ -178,19 +191,13 @@ function renderPatients(data){
                 <input id="tel${p.id}" value="${p.tel}">
             </td>
 
-            <td>
-<button onclick="drugandinvoice(${p.id})">
-                    Drug & Invoice
-                </button>
-                <button onclick="updatePatient(${p.id})">
-                    Save Info
-                </button>
-
-                <button class="deleteBtn" onclick="deletePatient(${p.id})">
-                    Delete Patient
-                </button>
-
-            </td>
+           <td>
+    <div class="action-buttons">
+        <button onclick="drugandinvoice(${p.id})" style="background:black">Drug & Invoice</button>
+        <button onclick="updatePatient(${p.id})">Save Info</button>
+        <button class="deleteBtn" onclick="deletePatient(${p.id})">Delete</button>
+    </div>
+</td>
 
         </tr>
         `;
