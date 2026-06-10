@@ -30,13 +30,31 @@ body{
 }
 
 #invoiceTable{
-    width:100%;
-    min-width:600px;
+    table-layout:fixed;
 }
 
-#invoiceTable input[type="number"]{
+#invoiceTable th:nth-child(1),
+#invoiceTable td:nth-child(1){
+    width:auto;
+}
+
+#invoiceTable th:nth-child(2),
+#invoiceTable td:nth-child(2){
+    width:80px;
+}
+
+#invoiceTable th:nth-child(3),
+#invoiceTable td:nth-child(3){
     width:70px;
-    min-width:70px;
+}
+
+
+#invoiceTable input[type="number"]{
+    width:60px !important;
+    min-width:60px !important;
+    max-width:60px !important;
+    text-align:center;
+    padding:4px;
 }
     
     
