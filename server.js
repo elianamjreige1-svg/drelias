@@ -206,7 +206,16 @@ app.post("/deductStock", async (req,res)=>{
 
 app.post("/drugs", async (req,res)=>{
 
-    const { name, quantity, price } = req.body;
+      const { name, quantity, price } = req.body;
+
+    const existing = await db.query(
+        "SELECT * FROM drugs WHERE LOWER(name) = LOWER(?)",
+        [name]
+    );
+
+    if(existing.length > 0){
+        return res.status(400).send("Drug already exists");
+    }
 
     await query(
         "INSERT INTO drugs (name, quantity, price) VALUES (?,?,?)",
