@@ -251,15 +251,7 @@ let selectedPatientName = "";
     
 let allPatients = [];
 
-function initPatients(){
-    fetch("/patients")
-    .then(res => res.json())
-    .then(data => {
-        allPatients = data; // بس نخزنهم
-    });
-}
 
-initPatients();
     
 function renderPatients(data){
 
@@ -436,7 +428,7 @@ function deletePatient(id){
     }
 
 }
-
+/*
 function filterPatients(){
 
     let value = document.getElementById("searchAll").value.trim().toLowerCase();
@@ -458,8 +450,8 @@ function filterPatients(){
 
     renderPatients(filtered);
 }
+*/
 
-/*
 function filterPatients(){
 
     let value = document.getElementById("searchAll").value.toLowerCase();
@@ -477,8 +469,8 @@ function filterPatients(){
 
     renderPatients(filtered);
 }
-*/
-//loadPatients();
+
+loadPatients();
 
 
     function drugandinvoice(id,name){
