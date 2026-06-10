@@ -447,8 +447,9 @@ loadPatients();
 
         allDrugs=data;
 
-        displayDrugs(data);
+      //  displayDrugs(data);
 
+    document.getElementById("drugResults").innerHTML = "";
         renderInvoice();
 
     });
@@ -462,7 +463,24 @@ function closeInvoice(){
 }
 
 function filterDrugs(){
+    let txt =
+        document.getElementById("drugSearch")
+        .value
+        .trim()
+        .toLowerCase();
 
+    if(txt === ""){
+        document.getElementById("drugResults").innerHTML = "";
+        return;
+    }
+
+    let filtered =
+        allDrugs.filter(d =>
+            d.name.toLowerCase().includes(txt)
+        );
+
+    displayDrugs(filtered);
+/*
     let txt =
     document.getElementById("drugSearch")
     .value
@@ -474,7 +492,7 @@ function filterDrugs(){
     );
 
     displayDrugs(filtered);
-
+*/
 }
 
 function displayDrugs(drugs){
