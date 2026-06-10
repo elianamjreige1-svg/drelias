@@ -644,9 +644,39 @@ function removeDrug(index){
 
 }
 
+function validateStock(){
 
+    for(let item of invoiceItems){
+
+        if(item.qty > item.stock){
+            alert(
+                "Not enough stock for " +
+                item.name +
+                " (max: " +
+                item.stock +
+                ")"
+            );
+
+            return false;
+        }
+
+    }
+
+    return true;
+}
+    
     async function generatePDF(){
+  // 🚨 STOP IF STOCK INVALID
+    if(!validateStock()){
+        return; // <-- THIS is the most important line
+    }
 
+const ok = confirm("Are you sure you want to generate the invoice and update stock?");
+
+    if(!ok){
+        return; // user cancelled → STOP EVERYTHING
+    }
+        
     const consultation =
     Number(
         document.getElementById(
