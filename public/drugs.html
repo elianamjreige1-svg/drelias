@@ -255,7 +255,14 @@ function addDrug(){
         return;
     }
 
+  // 🚨 CHECK EXISTING IN CURRENT TABLE
+    let existingNames = Array.from(document.querySelectorAll("#drugsTable tr td input[id^='name']"))
+        .map(input => input.value.trim().toLowerCase());
 
+    if(existingNames.includes(name)){
+        alert("Drug already exists!");
+        return;
+    }
    
     
     fetch("/drugs",{
