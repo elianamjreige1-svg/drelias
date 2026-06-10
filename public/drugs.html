@@ -68,24 +68,24 @@ th,td{
 </head>
 
 <body>
-
 <div class="container">
 
 <h1>Drugs Management</h1>
 
-<h3>Add / Edit Drug</h3>
-
 <input id="name" placeholder="Drug Name">
-<input id="qty" type="number" placeholder="Quantity">
+<input id="qty" type="number" placeholder="Quantity in Stock">
 <input id="price" type="number" placeholder="Unit Price">
 
 <button onclick="saveDrug()">Save Drug</button>
 
-<br><br>
-
 <input id="search" placeholder="Search drug..." onkeyup="loadDrugs()">
 
-<table id="drugsTable"></table>
+<!-- IMPORTANT WRAPPER -->
+<div class="table-wrapper">
+
+    <table id="drugsTable"></table>
+
+</div>
 
 </div>
 
