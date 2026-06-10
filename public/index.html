@@ -251,6 +251,16 @@ let selectedPatientName = "";
     
 let allPatients = [];
 
+function initPatients(){
+    fetch("/patients")
+    .then(res => res.json())
+    .then(data => {
+        allPatients = data; // بس نخزنهم
+    });
+}
+
+initPatients();
+    
 function renderPatients(data){
 
  if(!data || data.length === 0){
