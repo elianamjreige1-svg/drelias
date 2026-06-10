@@ -508,7 +508,7 @@ function displayDrugs(drugs){
             -
             Stock: ${d.quantity}
             -
-            $${d.price}
+           Price: $${d.price}
 
         </div>
         `;
@@ -554,7 +554,7 @@ function renderInvoice(){
         <th>Drug</th>
        
         <th>Quantity</th>
-        <th>Total($)</th>
+      
         <th>Remove</th>
     </tr>
     `;
@@ -586,7 +586,7 @@ function renderInvoice(){
 
         </td>
 
-        <td>${lineTotal}</td>
+       
 
         <td>
 
@@ -961,7 +961,7 @@ async function generatePDF(){
     // ===== TABLE =====
     pdf.autoTable({
         startY: 45,
-        head: [["Drug", "Qty", "Price", "Total"]],
+        head: [["Drug", "Quantity", "Price", "Total"]],
         body: tableData,
         theme: "grid",
         headStyles: {
