@@ -208,6 +208,61 @@ h1,h2{
         font-size:14px;
         min-height:42px;
     }
+
+
+
+    /* table container scroll (very important) */
+    .table-container{
+        overflow-x:auto;
+    }
+
+    /* keep table readable on mobile */
+    table{
+        min-width:600px;
+        font-size:12px;
+    }
+
+    #invoiceTable{
+        width:100%;
+        table-layout:fixed;
+        font-size:12px;
+    }
+
+    /* DRUG COLUMN (takes remaining space but doesn't explode) */
+    #invoiceTable th:nth-child(1),
+    #invoiceTable td:nth-child(1){
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width:120px;
+    }
+
+    /* QUANTITY + REMOVE columns smaller */
+    #invoiceTable th:nth-child(2),
+    #invoiceTable td:nth-child(2),
+    #invoiceTable th:nth-child(3),
+    #invoiceTable td:nth-child(3){
+        width:45px;
+        min-width:45px;
+        max-width:45px;
+        padding:2px;
+    }
+
+    /* number inputs smaller */
+    #invoiceTable input[type="number"]{
+        width:40px;
+        min-width:40px;
+        max-width:40px;
+        font-size:12px;
+        padding:2px;
+        text-align:center;
+    }
+
+    /* buttons smaller */
+    #invoiceTable button{
+        padding:2px 4px;
+        font-size:11px;
+    }
 }
 </style>
 </head>
