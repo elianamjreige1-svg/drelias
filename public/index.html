@@ -695,7 +695,7 @@ function removeDrug(index){
 
     pdf.setFontSize(18);
     pdf.text(
-        "Dr Elias Invoice",
+        "Dr Elias Karaan Consultation Invoice",
         20,
         y
     );
@@ -723,13 +723,11 @@ function removeDrug(index){
 
         drugsTotal += total;
 
-        pdf.text(
-            `${item.name}
-             x${item.qty}
-             = $${total}`,
-            20,
-            y
-        );
+       pdf.text(
+    `${item.name} x${item.qty} = $${total.toFixed(2)}`,
+    20,
+    y
+);
 
         y += 10;
 
