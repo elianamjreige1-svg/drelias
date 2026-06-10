@@ -823,6 +823,8 @@ y += 10;
 
 async function generatePDF(){
 
+    console.log("Generate PDF clicked");
+
     // ===== STOCK VALIDATION FIRST =====
     if(!validateStock()){
         return;
@@ -833,7 +835,7 @@ async function generatePDF(){
         return;
     }
 
-    // ===== UPDATE STOCK FIRST =====
+    // ===== UPDATE STOCK =====
     const response = await fetch("/deductStock", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -845,35 +847,44 @@ async function generatePDF(){
         return;
     }
 
-    // ===== PDF INIT =====
-    const { jsPDF } = window.jspdf;
-    const pdf = new jsPDF();
+    // ===== CHECK JSPDF =====
+    if(!window.jspdf){
+        alert("jsPDF is not loaded!");
+        return;
+    }
+
+    const pdf = new window.jspdf.jsPDF();
 
     const pageWidth = pdf.internal.pageSize.getWidth();
 
     // ===== INVOICE NUMBER =====
-    const invoiceNumber =
-        "INV-" + Date.now().toString().slice(-6);
+    const invoiceNumber = "INV-" + Date.now().toString().slice(-6);
 
-    // ===== TITLE (BIG + BOLD) =====
+    // ===== TITLE =====
     pdf.setFontSize(24);
     pdf.setFont("helvetica", "bold");
 
-    pdf.text("Dr Elias Invoice", pageWidth / 2, 15, {
-        align: "center"
-    });
+    pdf.text(
+        "Dr Elias Invoice",
+        pageWidth / 2,
+        15,
+        { align: "center" }
+    );
 
     pdf.line(20, 18, pageWidth - 20, 18);
 
-    // ===== DATE (RIGHT ALIGNED) =====
+    // ===== DATE (RIGHT) =====
     const formattedDate = new Date().toLocaleDateString("en-GB");
 
     pdf.setFontSize(11);
     pdf.setFont("helvetica", "normal");
 
-    pdf.text("Date: " + formattedDate, pageWidth - 20, 25, {
-        align: "right"
-    });
+    pdf.text(
+        "Date: " + formattedDate,
+        pageWidth - 20,
+        25,
+        { align: "right" }
+    );
 
     // ===== INVOICE NUMBER =====
     pdf.text("Invoice #: " + invoiceNumber, 20, 25);
@@ -881,26 +892,32 @@ async function generatePDF(){
     // ===== PATIENT =====
     pdf.setFontSize(13);
     pdf.setFont("helvetica", "bold");
-    pdf.text("Patient: " + selectedPatientName, 20, 35);
 
-    // ===== CALCULATE DRUGS TOTAL =====
+    pdf.text(
+        "Patient: " + selectedPatientName,
+        20,
+        35
+    );
+
+    // ===== CALCULATE =====
     let drugsTotal = 0;
 
     const tableData = invoiceItems.map(item => {
+
         const total = item.price * item.qty;
         drugsTotal += total;
 
         return [
             item.name,
             item.qty,
-            `$${item.price.toFixed(2)}`,
+            `$${Number(item.price).toFixed(2)}`,
             `$${total.toFixed(2)}`
         ];
     });
 
-    // ===== DRUGS TOTAL INSIDE TABLE =====
+    // ===== TOTAL ROW =====
     tableData.push([
-        { 
+        {
             content: "Drugs Total",
             colSpan: 3,
             styles: {
@@ -955,17 +972,17 @@ async function generatePDF(){
         y
     );
 
-    // ===== PRINT BUTTON (opens print dialog) =====
+    // ===== SAFE PRINT =====
     const blob = pdf.output("blob");
     const url = URL.createObjectURL(blob);
 
     const printWindow = window.open(url);
 
-    printWindow.onload = function () {
-        printWindow.print();
-    };
+    if(printWindow){
+        printWindow.onload = () => printWindow.print();
+    }
 
-    // ===== SAVE FILE =====
+    // ===== DOWNLOAD =====
     pdf.save(invoiceNumber + ".pdf");
 
     closeInvoice();
