@@ -119,6 +119,63 @@ app.delete("/patients/:id", async (req, res) => {
     res.send("ok");
 });
 
+
+app.get("/drugs", async (req,res)=>{
+
+    const drugs = await query(
+        "SELECT * FROM drugs ORDER BY name"
+    );
+
+    res.json(drugs);
+
+});
+
+app.post("/deductStock", async (req,res)=>{
+
+    const { items } = req.body;
+
+    try{
+
+        for(const item of items){
+
+            const drug = await query(
+                "SELECT quantity FROM drugs WHERE id=?",
+                [item.id]
+            );
+
+            if(drug.length === 0){
+                return res.status(400).send("Drug not found");
+            }
+
+            if(drug[0].quantity < item.qty){
+                return res.status(400)
+                .send("Not enough stock for "+item.name);
+            }
+
+        }
+
+        for(const item of items){
+
+            await query(
+                `UPDATE drugs
+                 SET quantity = quantity - ?
+                 WHERE id = ?`,
+                [item.qty,item.id]
+            );
+
+        }
+
+        res.send("ok");
+
+    }
+    catch(err){
+        console.log(err);
+        res.status(500).send("error");
+    }
+
+});
+
+
 const PORT = process.env.PORT || 3000;
 
 server.listen(PORT, () => {
