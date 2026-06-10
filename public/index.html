@@ -39,12 +39,16 @@ body{
 }
 
 #invoiceTable input[type="number"]{
-    width:50px;
-    min-width:30px;
+    width:40px;
+    min-width:40px;
+    max-width:40px;
+    padding:2px;
+    text-align:center;
 }
     
 #invoiceTable button{
-    padding:2px 6px;
+   padding:2px 5px;
+    font-size:12px;
     margin:0;
 }
     
@@ -602,9 +606,7 @@ function renderInvoice(){
 
         <button
         onclick="removeDrug(${index})">
-
         X
-
         </button>
 
         </td>
