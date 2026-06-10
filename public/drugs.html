@@ -15,45 +15,26 @@ body{
     color:white;
 }
 
-/* ===== FORM CARD (same as modal style) ===== */
-.modalContent{
-    background:white;
-    color:black;
+h1{
+    text-align:center;
+}
+
+/* SEARCH */
+.searchBox{
     width:95%;
     max-width:900px;
-    margin:20px auto;
-    padding:15px;
-    box-sizing:border-box;
-    border-radius:8px;
+    margin:10px auto;
 }
 
-.modalContent input{
+.searchBox input{
     width:100%;
-    box-sizing:border-box;
     padding:12px;
-    margin:5px 0;
     border-radius:6px;
-    border:1px solid #ccc;
-    font-size:15px;
-}
-
-.modalContent button{
-    padding:12px 16px;
-    margin-top:10px;
     border:none;
-    border-radius:6px;
-    cursor:pointer;
-    font-size:15px;
-    background:#4CAF50;
-    color:white;
-    width:100%;
+    box-sizing:border-box;
 }
 
-.modalContent button:hover{
-    opacity:0.9;
-}
-
-/* ===== TABLE ===== */
+/* TABLE */
 .table-container{
     overflow-x:auto;
     width:95%;
@@ -75,14 +56,16 @@ th,td{
     text-align:center;
 }
 
-/* action buttons */
-.actions button{
-    width:auto;
-    padding:6px 10px;
-    margin:2px;
-    font-size:12px;
+/* INLINE INPUTS */
+td input{
+    width:95%;
+    padding:8px;
+    border:1px solid #ccc;
+    border-radius:5px;
+    text-align:center;
 }
 
+/* ACTION BUTTONS */
 .actions{
     display:flex;
     justify-content:center;
@@ -90,24 +73,25 @@ th,td{
     flex-wrap:wrap;
 }
 
-/* ===== SEARCH ===== */
-.searchBox{
-    width:95%;
-    max-width:900px;
-    margin:10px auto;
-}
-
-.searchBox input{
-    width:100%;
-    padding:12px;
-    border-radius:6px;
+.actions button{
+    padding:6px 10px;
+    font-size:12px;
     border:none;
-    box-sizing:border-box;
+    border-radius:5px;
+    cursor:pointer;
+    color:white;
 }
 
-/* ===== MOBILE ===== */
-@media (max-width:768px){
+.saveBtn{
+    background:#4CAF50;
+}
 
+.deleteBtn{
+    background:#e53935;
+}
+
+/* MOBILE */
+@media (max-width:768px){
     table{
         min-width:600px;
     }
@@ -126,20 +110,7 @@ th,td{
 
 <body>
 
-<h1 style="text-align:center;">Drugs Management</h1>
-
-<!-- ADD / EDIT DRUG -->
-<div class="modalContent">
-
-    <h2>Add / Edit Drug</h2>
-
-    <input id="name" placeholder="Drug Name">
-    <input id="qty" type="number" placeholder="Quantity in Stock">
-    <input id="price" type="number" placeholder="Unit Price">
-
-    <button onclick="saveDrug()">Save Drug</button>
-
-</div>
+<h1>Drugs Management</h1>
 
 <!-- SEARCH -->
 <div class="searchBox">
@@ -153,44 +124,53 @@ th,td{
 
 <script>
 
-let editingId = null;
-
 // LOAD DRUGS
 function loadDrugs(){
 
     let q = document.getElementById("search").value;
 
     fetch("/drugs?name=" + q)
-    .then(r=>r.json())
-    .then(data=>{
+    .then(r => r.json())
+    .then(data => {
 
         let html = `
         <tr>
             <th>Name</th>
             <th>Qty</th>
-            <th>Price</th>
+            <th>Price ($)</th>
             <th>Actions</th>
         </tr>
         `;
 
-        data.forEach(d=>{
+        data.forEach(d => {
 
             html += `
             <tr>
-                <td>${d.name}</td>
-                <td>${d.quantity}</td>
-                <td>$${Number(d.price).toFixed(2)}</td>
+
+                <td>
+                    <input id="name${d.id}" value="${d.name}">
+                </td>
+
+                <td>
+                    <input id="qty${d.id}" type="number" value="${d.quantity}">
+                </td>
+
+                <td>
+                    <input id="price${d.id}" type="number" value="${d.price}">
+                </td>
+
                 <td class="actions">
 
-                    <button onclick="editDrug(${d.id},'${d.name}',${d.quantity},${d.price})">
-                        Edit
+                    <button class="saveBtn" onclick="saveDrug(${d.id})">
+                        Save Info
                     </button>
 
-                    <button onclick="deleteDrug(${d.id})" style="background:#e53935;color:white;">
+                    <button class="deleteBtn" onclick="deleteDrug(${d.id})">
                         Delete
                     </button>
 
                 </td>
+
             </tr>
             `;
         });
@@ -202,22 +182,22 @@ function loadDrugs(){
 }
 
 // SAVE DRUG
-function saveDrug(){
+function saveDrug(id){
 
-    let name = document.getElementById("name").value;
-    let qty = document.getElementById("qty").value;
-    let price = document.getElementById("price").value;
+    let name = document.getElementById("name"+id).value;
+    let qty = document.getElementById("qty"+id).value;
+    let price = document.getElementById("price"+id).value;
 
     if(!name || !qty || !price){
         alert("Please fill all fields");
         return;
     }
 
-    let url = editingId ? "/drugs/" + editingId : "/drugs";
-    let method = editingId ? "PUT" : "POST";
+    let ok = confirm("Are you sure you want to save changes?");
+    if(!ok) return;
 
-    fetch(url,{
-        method:method,
+    fetch("/drugs/"+id,{
+        method:"PUT",
         headers:{
             "Content-Type":"application/json"
         },
@@ -227,28 +207,9 @@ function saveDrug(){
             price
         })
     })
-    .then(()=>{
-
-        document.getElementById("name").value="";
-        document.getElementById("qty").value="";
-        document.getElementById("price").value="";
-
-        editingId = null;
-
+    .then(() => {
         loadDrugs();
-
     });
-
-}
-
-// EDIT DRUG
-function editDrug(id,name,qty,price){
-
-    editingId = id;
-
-    document.getElementById("name").value = name;
-    document.getElementById("qty").value = qty;
-    document.getElementById("price").value = price;
 
 }
 
