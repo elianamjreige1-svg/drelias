@@ -49,8 +49,16 @@ th,td{
 .actions button{
     margin:2px;
 }
-
-
+.form{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+}
+.form input,
+.form button{
+    width:100%;
+    box-sizing:border-box;
+}
 @media (max-width:768px){
 
     /* keep top form full width */
@@ -80,12 +88,13 @@ th,td{
 <div class="container">
 
 <h1>Drugs Management</h1>
+<div class="form">
+    <input id="name" placeholder="Drug Name">
+    <input id="qty" type="number" placeholder="Quantity in Stock">
+    <input id="price" type="number" placeholder="Unit Price">
 
-<input id="name" placeholder="Drug Name">
-<input id="qty" type="number" placeholder="Quantity in Stock">
-<input id="price" type="number" placeholder="Unit Price">
-
-<button onclick="saveDrug()">Save Drug</button>
+    <button onclick="saveDrug()">Save Drug</button>
+</div>
 
 <input id="search" placeholder="Search drug..." onkeyup="loadDrugs()">
 
