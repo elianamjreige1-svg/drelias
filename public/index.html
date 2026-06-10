@@ -16,6 +16,36 @@ body{
     color:white;
 }
 
+.modal{
+    display:none;
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,.7);
+    overflow:auto;
+}
+
+.modalContent{
+    background:white;
+    color:black;
+    max-width:900px;
+    margin:20px auto;
+    padding:20px;
+}
+
+#drugResults div{
+    background:#eee;
+    margin:3px;
+    padding:8px;
+    cursor:pointer;
+}
+
+#drugResults div:hover{
+    background:#ddd;
+}
+    
 .container{
     max-width:1200px;
     margin:auto;
@@ -158,6 +188,10 @@ onkeyup="filterPatients()">
 
 <script>
 
+let allDrugs = [];
+let invoiceItems = [];
+let selectedPatientName = "";
+    
 let allPatients = [];
 
 function renderPatients(data){
@@ -193,7 +227,7 @@ function renderPatients(data){
 
            <td>
     <div class="action-buttons">
-        <button onclick="drugandinvoice(${p.id})" style="background:black">Drug & Invoice</button>
+        <button onclick="drugandinvoice(${p.id},'${p.name}')" style="background:black">Drug & Invoice</button>
         <button onclick="updatePatient(${p.id})">Save Info</button>
         <button class="deleteBtn" onclick="deletePatient(${p.id})">Delete</button>
     </div>
@@ -351,7 +385,423 @@ function filterPatients(){
 
 loadPatients();
 
-</script>
 
+    function drugandinvoice(id,name){
+
+    selectedPatientName = name;
+
+    invoiceItems = [];
+
+    document.getElementById("invoicePatient").value=name;
+
+    document.getElementById("consultationFee").value="";
+    document.getElementById("discount").value="";
+
+    document.getElementById("invoiceModal").style.display="block";
+
+    fetch("/drugs")
+    .then(res=>res.json())
+    .then(data=>{
+
+        allDrugs=data;
+
+        displayDrugs(data);
+
+        renderInvoice();
+
+    });
+
+}
+
+function closeInvoice(){
+
+    document.getElementById("invoiceModal").style.display="none";
+
+}
+
+function filterDrugs(){
+
+    let txt =
+    document.getElementById("drugSearch")
+    .value
+    .toLowerCase();
+
+    let filtered =
+    allDrugs.filter(d=>
+        d.name.toLowerCase().includes(txt)
+    );
+
+    displayDrugs(filtered);
+
+}
+
+function displayDrugs(drugs){
+
+    let html="";
+
+    drugs.forEach(d=>{
+
+        html += `
+        <div onclick="addDrug(${d.id})">
+
+            ${d.name}
+            -
+            Stock: ${d.quantity}
+            -
+            $${d.price}
+
+        </div>
+        `;
+
+    });
+
+    document.getElementById("drugResults")
+    .innerHTML=html;
+
+}
+
+function addDrug(id){
+
+    let drug =
+    allDrugs.find(d=>d.id==id);
+
+    if(!drug) return;
+
+    let exists =
+    invoiceItems.find(i=>i.id==id);
+
+    if(exists) return;
+
+    invoiceItems.push({
+
+        id:drug.id,
+        name:drug.name,
+        price:drug.price,
+        stock:drug.quantity,
+        qty:1
+
+    });
+
+    renderInvoice();
+
+}
+
+
+function renderInvoice(){
+
+    let html=`
+    <tr>
+        <th>Drug</th>
+        <th>Price</th>
+        <th>Stock</th>
+        <th>Qty</th>
+        <th>Total</th>
+        <th></th>
+    </tr>
+    `;
+
+    let drugsTotal=0;
+
+    invoiceItems.forEach((item,index)=>{
+
+        let lineTotal =
+        item.price * item.qty;
+
+        drugsTotal += lineTotal;
+
+        html += `
+        <tr>
+
+        <td>${item.name}</td>
+
+        <td>${item.price}</td>
+
+        <td>${item.stock}</td>
+
+        <td>
+
+        <input
+        type="number"
+        min="1"
+        max="${item.stock}"
+        value="${item.qty}"
+        onchange="changeQty(${index},this.value)">
+
+        </td>
+
+        <td>${lineTotal}</td>
+
+        <td>
+
+        <button
+        onclick="removeDrug(${index})">
+
+        X
+
+        </button>
+
+        </td>
+
+        </tr>
+        `;
+    });
+
+    document.getElementById(
+        "invoiceTable"
+    ).innerHTML=html;
+
+    let consultation =
+    Number(
+        document.getElementById(
+            "consultationFee"
+        ).value
+    ) || 0;
+
+    let discount =
+    Number(
+        document.getElementById(
+            "discount"
+        ).value
+    ) || 0;
+
+    let total =
+    drugsTotal +
+    consultation -
+    discount;
+
+    document.getElementById(
+        "drugsTotal"
+    ).innerHTML =
+    "Drugs Total: $" +
+    drugsTotal.toFixed(2);
+
+    document.getElementById(
+        "grandTotal"
+    ).innerHTML =
+    "Total: $" +
+    total.toFixed(2);
+
+}
+
+function changeQty(index,value){
+
+    value = Number(value);
+
+    if(value < 1){
+        value = 1;
+    }
+
+    if(value > invoiceItems[index].stock){
+
+        alert(
+        "Cannot exceed stock"
+        );
+
+        value =
+        invoiceItems[index].stock;
+
+    }
+
+    invoiceItems[index].qty =
+    value;
+
+    renderInvoice();
+
+}
+
+function removeDrug(index){
+
+    invoiceItems.splice(index,1);
+
+    renderInvoice();
+
+}
+
+
+    async function generatePDF(){
+
+    const consultation =
+    Number(
+        document.getElementById(
+            "consultationFee"
+        ).value
+    ) || 0;
+
+    const discount =
+    Number(
+        document.getElementById(
+            "discount"
+        ).value
+    ) || 0;
+
+    const response =
+    await fetch(
+        "/deductStock",
+        {
+            method:"POST",
+            headers:{
+                "Content-Type":
+                "application/json"
+            },
+            body:JSON.stringify({
+                items:invoiceItems
+            })
+        }
+    );
+
+    if(!response.ok){
+
+        alert(
+        await response.text()
+        );
+
+        return;
+    }
+
+    const { jsPDF } =
+    window.jspdf;
+
+    const pdf =
+    new jsPDF();
+
+    let y=20;
+
+    pdf.setFontSize(18);
+    pdf.text(
+        "Dr Elias Invoice",
+        20,
+        y
+    );
+
+    y += 15;
+
+    pdf.setFontSize(12);
+
+    pdf.text(
+        "Patient: "+
+        selectedPatientName,
+        20,
+        y
+    );
+
+    y += 15;
+
+    let drugsTotal=0;
+
+    invoiceItems.forEach(item=>{
+
+        let total =
+        item.price *
+        item.qty;
+
+        drugsTotal += total;
+
+        pdf.text(
+            `${item.name}
+             x${item.qty}
+             = $${total}`,
+            20,
+            y
+        );
+
+        y += 10;
+
+    });
+
+    y += 10;
+
+    pdf.text(
+        "Drugs Total: $"+
+        drugsTotal.toFixed(2),
+        20,
+        y
+    );
+
+    y += 10;
+
+    pdf.text(
+        "Consultation: $"+
+        consultation.toFixed(2),
+        20,
+        y
+    );
+
+    y += 10;
+
+    pdf.text(
+        "Discount: $"+
+        discount.toFixed(2),
+        20,
+        y
+    );
+
+    y += 10;
+
+    pdf.text(
+        "Total: $"+
+        (
+            drugsTotal+
+            consultation-
+            discount
+        ).toFixed(2),
+        20,
+        y
+    );
+
+    pdf.save(
+        "invoice.pdf"
+    );
+
+    closeInvoice();
+
+}
+    
+    
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<div id="invoiceModal" class="modal">
+
+<div class="modalContent">
+
+<h2>Patient Invoice</h2>
+
+<input id="invoicePatient" readonly>
+
+<input id="consultationFee"
+       type="number"
+       placeholder="Consultation Fee"
+       oninput="renderInvoice()">
+
+<input id="discount"
+       type="number"
+       placeholder="Discount"
+       oninput="renderInvoice()">
+
+<hr>
+
+<input id="drugSearch"
+       placeholder="Search Drug"
+       onkeyup="filterDrugs()">
+
+<div id="drugResults"></div>
+
+<hr>
+
+<table id="invoiceTable"></table>
+
+<h3 id="drugsTotal">Drugs Total: 0</h3>
+<h3 id="grandTotal">Total: 0</h3>
+
+<button onclick="generatePDF()">
+Generate PDF
+</button>
+
+<button onclick="closeInvoice()">
+Close
+</button>
+
+</div>
+
+</div>
 </body>
 </html>
