@@ -502,7 +502,7 @@ loadPatients();
 }
 
 function closeInvoice(){
-
+if(confirm("Are you sure you want to close the invoice page?"))
     document.getElementById("invoiceModal").style.display="none";
 
 }
@@ -953,7 +953,7 @@ async function generatePDF(){
     pdf.setFont("helvetica", "bold");
 
     pdf.text(
-        "Dr Elias Karaan Consultation Invoice",
+        "Dr Elias Karaan's Clinic",
         pageWidth / 2,
         15,
         { align: "center" }
