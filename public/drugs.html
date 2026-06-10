@@ -19,7 +19,43 @@ h1{
     text-align:center;
 }
 
-/* SEARCH */
+/* ===== ADD FORM ===== */
+.formBox{
+    background:white;
+    color:black;
+    width:95%;
+    max-width:900px;
+    margin:20px auto;
+    padding:15px;
+    border-radius:8px;
+    box-sizing:border-box;
+}
+
+.formBox input{
+    width:100%;
+    padding:12px;
+    margin:5px 0;
+    border-radius:6px;
+    border:1px solid #ccc;
+    box-sizing:border-box;
+}
+
+.formBox button{
+    width:100%;
+    padding:12px;
+    margin-top:10px;
+    border:none;
+    border-radius:6px;
+    background:#4CAF50;
+    color:white;
+    cursor:pointer;
+}
+
+.formBox button:hover{
+    opacity:0.9;
+}
+
+/* ===== SEARCH ===== */
 .searchBox{
     width:95%;
     max-width:900px;
@@ -34,7 +70,7 @@ h1{
     box-sizing:border-box;
 }
 
-/* TABLE */
+/* ===== TABLE ===== */
 .table-container{
     overflow-x:auto;
     width:95%;
@@ -44,7 +80,7 @@ h1{
 
 table{
     width:100%;
-    min-width:700px;
+    min-width:750px;
     background:white;
     color:black;
     border-collapse:collapse;
@@ -56,7 +92,7 @@ th,td{
     text-align:center;
 }
 
-/* INLINE INPUTS */
+/* INPUTS INSIDE TABLE */
 td input{
     width:95%;
     padding:8px;
@@ -65,12 +101,14 @@ td input{
     text-align:center;
 }
 
-/* ACTION BUTTONS */
+/* ===== ACTION BUTTONS (IMPORTANT FIX) ===== */
 .actions{
     display:flex;
+    flex-direction:row;
+    flex-wrap:nowrap;
     justify-content:center;
-    gap:5px;
-    flex-wrap:wrap;
+    gap:6px;
+    align-items:center;
 }
 
 .actions button{
@@ -80,6 +118,7 @@ td input{
     border-radius:5px;
     cursor:pointer;
     color:white;
+    white-space:nowrap;
 }
 
 .saveBtn{
@@ -90,18 +129,20 @@ td input{
     background:#e53935;
 }
 
-/* MOBILE */
+/* ===== MOBILE ===== */
 @media (max-width:768px){
+
     table{
-        min-width:600px;
+        min-width:650px;
     }
 
     .actions{
-        flex-direction:column;
+        flex-wrap:wrap;
     }
 
     .actions button{
-        width:100%;
+        width:auto;
+        flex:1;
     }
 }
 
@@ -111,6 +152,19 @@ td input{
 <body>
 
 <h1>Drugs Management</h1>
+
+<!-- ADD DRUG FORM -->
+<div class="formBox">
+
+    <h2>Add New Drug</h2>
+
+    <input id="name" placeholder="Drug Name">
+    <input id="qty" type="number" placeholder="Quantity in Stock">
+    <input id="price" type="number" placeholder="Unit Price ($)">
+
+    <button onclick="addDrug()">Add Drug</button>
+
+</div>
 
 <!-- SEARCH -->
 <div class="searchBox">
@@ -124,7 +178,7 @@ td input{
 
 <script>
 
-// LOAD DRUGS
+// ===== LOAD DRUGS =====
 function loadDrugs(){
 
     let q = document.getElementById("search").value;
@@ -181,7 +235,42 @@ function loadDrugs(){
 
 }
 
-// SAVE DRUG
+// ===== ADD DRUG =====
+function addDrug(){
+
+    let name = document.getElementById("name").value;
+    let qty = document.getElementById("qty").value;
+    let price = document.getElementById("price").value;
+
+    if(!name || !qty || !price){
+        alert("Please fill all fields");
+        return;
+    }
+
+    fetch("/drugs",{
+        method:"POST",
+        headers:{
+            "Content-Type":"application/json"
+        },
+        body:JSON.stringify({
+            name,
+            quantity:qty,
+            price
+        })
+    })
+    .then(() => {
+
+        document.getElementById("name").value="";
+        document.getElementById("qty").value="";
+        document.getElementById("price").value="";
+
+        loadDrugs();
+
+    });
+
+}
+
+// ===== SAVE DRUG =====
 function saveDrug(id){
 
     let name = document.getElementById("name"+id).value;
@@ -193,8 +282,7 @@ function saveDrug(id){
         return;
     }
 
-    let ok = confirm("Are you sure you want to save changes?");
-    if(!ok) return;
+    if(!confirm("Save changes for this drug?")) return;
 
     fetch("/drugs/"+id,{
         method:"PUT",
@@ -207,13 +295,11 @@ function saveDrug(id){
             price
         })
     })
-    .then(() => {
-        loadDrugs();
-    });
+    .then(loadDrugs);
 
 }
 
-// DELETE DRUG
+// ===== DELETE DRUG =====
 function deleteDrug(id){
 
     if(!confirm("Delete this drug?")) return;
