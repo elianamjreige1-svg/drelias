@@ -693,12 +693,24 @@ function removeDrug(index){
 
     let y=20;
 
-    pdf.setFontSize(18);
-    pdf.text(
-        "Dr Elias Karaan Consultation Invoice",
-        20,
-        y
-    );
+pdf.setFontSize(18);
+pdf.text("Dr Elias Invoice", 20, y);
+
+y += 10;
+
+// ADD DATE
+const today = new Date();
+/*
+const formattedDate =
+    today.getDate() + "/" +
+    (today.getMonth() + 1) + "/" +
+    today.getFullYear();
+*/
+const formattedDate = new Date().toLocaleDateString("en-GB");
+pdf.setFontSize(12);
+pdf.text("Date: " + formattedDate, 20, y);
+
+y += 10;
 
     y += 15;
 
