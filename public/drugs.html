@@ -30,39 +30,48 @@ button{
 
 table{
     width:100%;
+    min-width:700px;
     background:white;
     color:black;
     border-collapse:collapse;
-    margin-top:20px;
-    min-width:600px;
 }
-
 th,td{
     border:1px solid #ccc;
     padding:8px;
     text-align:center;
 }
 
-    .table-wrapper{
+   .table-wrapper{
+    width:100%;
     overflow-x:auto;
-    margin-top:15px;
+    -webkit-overflow-scrolling:touch;
 }
 .actions button{
     margin:2px;
 }
 
 
-    @media (max-width:768px){
+@media (max-width:768px){
 
-    input, button{
+    /* keep top form full width */
+    .container > input,
+    .container > button{
         width:100%;
         box-sizing:border-box;
     }
 
-    .actions button{
-        width:100%;
-        margin:3px 0;
+    /* keep table buttons normal (NOT full width inside table) */
+    td button{
+        width:auto;
+        display:inline-block;
     }
+
+    .actions{
+        display:flex;
+        flex-direction:column;
+        gap:5px;
+    }
+
 }
 </style>
 </head>
