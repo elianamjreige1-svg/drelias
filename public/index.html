@@ -177,7 +177,9 @@ function renderPatients(data){
             <td>
                 <input id="tel${p.id}" value="${p.tel}">
             </td>
-
+<td><button onclick="drugandinvoice(${p.id})">
+                    Drug & Invoice
+                </button></td>
             <td>
 
                 <button onclick="updatePatient(${p.id})">
@@ -250,6 +252,36 @@ if(document.getElementById("name").value=="" || document.getElementById("dob").v
 
 }
 
+
+function drugandinvoice(id){
+/*
+    if(confirm("Update this patient?")){
+
+        fetch("/patients/"+id,{
+
+            method:"PUT",
+
+            headers:{
+                "Content-Type":"application/json"
+            },
+
+            body:JSON.stringify({
+
+                name:document.getElementById("name"+id).value,
+
+                dob:document.getElementById("dob"+id).value,
+
+                tel:document.getElementById("tel"+id).value
+
+            })
+
+        })
+        .then(loadPatients);
+
+    }
+*/
+}
+    
 function updatePatient(id){
 
     if(confirm("Update this patient?")){
