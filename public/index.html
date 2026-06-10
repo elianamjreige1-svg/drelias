@@ -902,7 +902,7 @@ async function generatePDF(){
     if(!validateStock()){
         return;
     }
-
+/*
  const consultation =
         Number(document.getElementById("consultationFee").value) || 0;
 
@@ -917,7 +917,7 @@ async function generatePDF(){
         alert("You must add consultation fee or at least one drug");
         return;
     }
-    
+    */
     const ok = confirm("Generate invoice and update stock?");
     if(!ok){
         return;
