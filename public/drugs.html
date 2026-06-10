@@ -105,20 +105,21 @@ td input{
 .actions{
     display:flex;
     flex-direction:row;
-    flex-wrap:nowrap;
+    flex-wrap:nowrap;   /* 🚫 NO WRAP */
     justify-content:center;
     gap:6px;
     align-items:center;
 }
 
 .actions button{
+    flex:0 0 auto;      /* 🚫 prevents stretching */
+    white-space:nowrap;
     padding:6px 10px;
     font-size:12px;
     border:none;
     border-radius:5px;
     cursor:pointer;
     color:white;
-    white-space:nowrap;
 }
 
 .saveBtn{
@@ -137,12 +138,12 @@ td input{
     }
 
     .actions{
-        flex-wrap:wrap;
+        flex-wrap:nowrap;   /* KEEP INLINE even on mobile */
     }
 
     .actions button{
-        width:auto;
-        flex:1;
+        width:auto;         /* 🚫 NOT 100% */
+        flex:0 0 auto;
     }
 }
 
@@ -190,7 +191,7 @@ function loadDrugs(){
         let html = `
         <tr>
             <th>Name</th>
-            <th>Qty</th>
+            <th>Quantity</th>
             <th>Price ($)</th>
             <th>Actions</th>
         </tr>
