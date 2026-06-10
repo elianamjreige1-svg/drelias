@@ -895,7 +895,7 @@ y += 10;
 }*/
 
 async function generatePDF(){
-
+    
     console.log("Generate PDF clicked");
 
     // ===== STOCK VALIDATION FIRST =====
@@ -903,6 +903,21 @@ async function generatePDF(){
         return;
     }
 
+ const consultation =
+        Number(document.getElementById("consultationFee").value) || 0;
+
+    let drugsTotal = 0;
+
+    invoiceItems.forEach(item => {
+        drugsTotal += item.price * item.qty;
+    });
+
+    // 🚨 BLOCK ONLY IF BOTH ARE ZERO
+    if(consultation <= 0 && drugsTotal <= 0){
+        alert("You must add consultation fee or at least one drug");
+        return;
+    }
+    
     const ok = confirm("Generate invoice and update stock?");
     if(!ok){
         return;
@@ -1114,7 +1129,7 @@ async function generatePDF(){
 <h3 id="grandTotal">Total: 0</h3>
 
 <button onclick="generatePDF()">
-Generate PDF
+Generate Invoice
 </button>
 
 <button onclick="closeInvoice()">
