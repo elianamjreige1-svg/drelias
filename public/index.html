@@ -623,7 +623,7 @@ if(drug.quantity <= 0){
         qty:1
 
     });
-
+  document.getElementById("donot").style.display=""; 
     renderInvoice();
 
 }
@@ -770,6 +770,14 @@ function removeDrug(index){
 
     invoiceItems.splice(index,1);
 
+      let dt = 0;
+    invoiceItems.forEach(item => {
+        dt += item.price * item.qty;
+    });
+
+    if(dt>0) document.getElementById("donot").style.display="";
+    else
+      document.getElementById("donot").style.display="none";  
     renderInvoice();
 
 }
@@ -1346,7 +1354,7 @@ function closeInvoiceDirect(){
 
 <h3 id="drugsTotal">Drugs Total: 0</h3>
 <h3 id="grandTotal">Total: 0</h3>
-<strong><label class="stock-toggle">
+<strong><label class="stock-toggle" style="display:none" id="donot">
    Do NOT update drugs stock
    <input type="checkbox" id="skipStockCheck">
 </label></strong>
