@@ -907,7 +907,7 @@ y += 10;
     closeInvoice();
 
 }*/
-
+/*
 async function generatePDF(){
     
     console.log("Generate PDF clicked");
@@ -936,14 +936,71 @@ async function generatePDF(){
         return;
     }
 */
-   let updateStock = false;
 
-if(dt > 0){
-    updateStock = confirm("Do you want to update the drugs stock?\n\nOK = Yes\nCancel = No");
-}
+async function generatePDF(){
+
+    console.log("Generate PDF clicked");
+
+    const skipStock = document.getElementById("skipStockCheck").checked;
+
+    // ===== CALCULATE TOTAL DRUGS =====
+    let dt = 0;
+    invoiceItems.forEach(item => {
+        dt += item.price * item.qty;
+    });
+
+    const cons =
+        Number(document.getElementById("consultationFee").value) || 0;
+
+    if (cons === 0 && dt === 0) {
+        alert("Cannot generate an invoice for $0");
+        return;
+    }
+
+    // =========================
+    // CASE 1: UPDATE STOCK MODE
+    // =========================
+    if(!skipStock){
+
+        // validate stock
+        if(!validateStock()){
+            return;
+        }
+
+        const ok = confirm("Do you want to generate invoice and update stock?");
+        if(!ok) return;
+
+        const response = await fetch("/deductStock", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ items: invoiceItems })
+        });
+
+        if(!response.ok){
+            alert(await response.text());
+            return;
+        }
+    }
+
+    // =========================
+    // CASE 2: NO STOCK MODE
+    // =========================
+    else {
+        const ok = confirm("Do you want to generate invoice WITHOUT updating stock?");
+        if(!ok) return;
+    }
+  
     
     // ===== UPDATE STOCK =====
-    if(updateStock){
+const skipStock = document.getElementById("skipStockCheck").checked;
+
+// ===== STOCK MODE =====
+if(!skipStock){
+
+    if(!validateStock()){
+        return;
+    }
+
     const response = await fetch("/deductStock", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -955,6 +1012,8 @@ if(dt > 0){
         return;
     }
 }
+    */
+    
     // ===== CHECK JSPDF =====
     if(!window.jspdf){
         alert("jsPDF is not loaded!");
@@ -1234,7 +1293,10 @@ function closeInvoiceDirect(){
 
 <h3 id="drugsTotal">Drugs Total: 0</h3>
 <h3 id="grandTotal">Total: 0</h3>
-
+<label style="display:block; margin:10px 0;">
+    <input type="checkbox" id="skipStockCheck">
+    Do NOT update drugs stock
+</label>
 <button onclick="generatePDF()">
 Generate Invoice
 </button>
