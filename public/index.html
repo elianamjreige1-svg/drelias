@@ -1094,8 +1094,8 @@ pdf.text(invoiceNumber, 20 + labelWidth + 2, 25);
 
     // ===== DOWNLOAD =====
     pdf.save(invoiceNumber + ".pdf");
-
-    closeInvoice();
+closeInvoiceDirect();
+  //  closeInvoice();
 }
 
     function generateInvoiceNumber() {
@@ -1151,6 +1151,9 @@ window.onbeforeunload = function(e){
         e.returnValue = '';
     }
 };
+function closeInvoiceDirect(){
+    document.getElementById("invoiceModal").style.display = "none";
+}
 </script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
