@@ -572,6 +572,11 @@ function addDrug(id){
 
     if(!drug) return;
 
+if(drug.quantity <= 0){
+    alert(`Cannot add ${drug.name}. Stock is 0!`);
+    return;
+}
+    
     let exists =
     invoiceItems.find(i=>i.id==id);
 
