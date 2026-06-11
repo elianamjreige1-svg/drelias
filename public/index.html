@@ -1000,6 +1000,10 @@ async function generatePDF(){
         return;
     }
 
+if(dt==0){
+    
+}
+    
     // =========================
     // CASE 1: UPDATE STOCK MODE
     // =========================
@@ -1009,8 +1013,10 @@ async function generatePDF(){
         if(!validateStock()){
             return;
         }
-
-        const ok = confirm("Do you want to generate invoice and update stock?");
+let ok=false;
+        if(dt==0)  ok = confirm("Do you want to generate invoice?");
+        else
+         ok = confirm("Do you want to generate invoice and update stock?");
         if(!ok) return;
 
         const response = await fetch("/deductStock", {
@@ -1029,7 +1035,10 @@ async function generatePDF(){
     // CASE 2: NO STOCK MODE
     // =========================
     else {
-        const ok = confirm("Do you want to generate invoice WITHOUT updating stock?");
+        let ok=false;
+        if(dt==0)  ok = confirm("Do you want to generate invoice?");
+        else
+         ok = confirm("Do you want to generate invoice WITHOUT updating stock?");
         if(!ok) return;
     }
   
