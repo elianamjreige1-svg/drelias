@@ -977,7 +977,7 @@ async function generatePDF(){
     // ===== DATE (RIGHT) =====
     const formattedDate = new Date().toLocaleDateString("en-GB");
 
-   pdf.setFontSize(11);
+   pdf.setFontSize(12);
 
 const dateLabel = "Date:";
 const dateValue = " " + formattedDate;
@@ -1010,7 +1010,7 @@ pdf.setFont("helvetica", "normal");
 pdf.text(invoiceNumber, 20 + labelWidth + 2, 25);
 
     // ===== PATIENT =====
-pdf.setFontSize(13);
+pdf.setFontSize(14);
 
 pdf.setFont("helvetica", "bold");
 pdf.text("Patient:", 20, 35);
@@ -1065,7 +1065,7 @@ pdf.text(
             fontStyle: "bold"
         },
         styles: {
-            fontSize: 11,
+            fontSize: 12,
             cellPadding: 3
         }
     });
@@ -1079,7 +1079,7 @@ pdf.text(
     const discount =
         Number(document.getElementById("discount").value) || 0;
 
-    pdf.setFontSize(11);
+    pdf.setFontSize(12);
     pdf.setFont("helvetica", "normal");
 
   pdf.setFont("helvetica", "bold");
