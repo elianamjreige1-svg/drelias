@@ -1025,7 +1025,7 @@ if(dt==0){
 let ok=false;
         if(dt==0)  ok = confirm("Do you want to generate invoice?");
         else
-         ok = confirm("Do you want to generate invoice and update stock?");
+         ok = confirm("Do you want to generate invoice AND UPDATE DRUGS STOCK?");
         if(!ok) return;
 
         const response = await fetch("/deductStock", {
@@ -1047,7 +1047,7 @@ let ok=false;
         let ok=false;
         if(dt==0)  ok = confirm("Do you want to generate invoice?");
         else
-         ok = confirm("Do you want to generate invoice WITHOUT updating stock?");
+         ok = confirm("Do you want to generate invoice WITHOUT UPDATING DRUGS STOCK?");
         if(!ok) return;
     }
   
