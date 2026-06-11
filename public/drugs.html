@@ -254,7 +254,8 @@ function addDrug(){
         alert("Please fill all fields");
         return;
     }
-
+if(qty==0) {alert("Quantity cannot be 0");return;}
+    if(price==0) {alert("Price cannot be 0");return;}
    if(!confirm("Add this drug?")) return;
    
     
