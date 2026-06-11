@@ -988,7 +988,16 @@ async function generatePDF(){
     );
 
     // ===== INVOICE NUMBER =====
-    pdf.text("Invoice #: " + invoiceNumber, 20, 25);
+ //   pdf.text("Invoice #: " + invoiceNumber, 20, 25);
+
+    pdf.setFont("helvetica", "bold");
+const label = "Invoice #:";
+pdf.text(label, 20, 25);
+
+const labelWidth = pdf.getTextWidth(label);
+
+pdf.setFont("helvetica", "normal");
+pdf.text(invoiceNumber, 20 + labelWidth + 2, 25);
 
     // ===== PATIENT =====
     pdf.setFontSize(13);
