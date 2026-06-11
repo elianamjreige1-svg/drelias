@@ -930,13 +930,16 @@ async function generatePDF(){
         alert("Cannot generate an invoice for $0");
         return;
     }
-    
+    /*
     const ok = confirm("Generate invoice and update stock?");
     if(!ok){
         return;
     }
-
+*/
+    const updateStock = confirm("Do you want to update the drugs stock?\n\nOK = Yes\nCancel = No");
+    
     // ===== UPDATE STOCK =====
+    if(updateStock){
     const response = await fetch("/deductStock", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -947,7 +950,7 @@ async function generatePDF(){
         alert(await response.text());
         return;
     }
-
+}
     // ===== CHECK JSPDF =====
     if(!window.jspdf){
         alert("jsPDF is not loaded!");
