@@ -936,7 +936,11 @@ async function generatePDF(){
         return;
     }
 */
-    const updateStock = confirm("Do you want to update the drugs stock?\n\nOK = Yes\nCancel = No");
+   let updateStock = false;
+
+if(dt > 0){
+    updateStock = confirm("Do you want to update the drugs stock?\n\nOK = Yes\nCancel = No");
+}
     
     // ===== UPDATE STOCK =====
     if(updateStock){
