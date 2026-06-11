@@ -255,7 +255,7 @@ function addDrug(){
         return;
     }
 
-  
+   if(!confirm("Add this drug?")) return;
    
     
     fetch("/drugs",{
