@@ -535,6 +535,7 @@ if(cons==0 && dt==0)
 if(confirm("Are you sure you want to close the invoice panel?")){
     resetInvoiceModal();
     document.getElementById("invoiceModal").style.display="none";
+     document.getElementById("donot").style.display="none";
 }
 
 }
@@ -1257,6 +1258,7 @@ pdf.text(
 
     // ===== DOWNLOAD =====
     pdf.save(invoiceNumber + ".pdf");
+     document.getElementById("donot").style.display="none";
 closeInvoiceDirect();
   //  closeInvoice();
 }
