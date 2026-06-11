@@ -24,6 +24,15 @@ body{
     overflow-x:auto;
 }
 
+.stock-toggle{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin:10px 0;
+    color:red;
+    white-space:nowrap;
+}
+    
 .modalContent input{
     width:100%;
     box-sizing:border-box;
@@ -1293,9 +1302,10 @@ function closeInvoiceDirect(){
 
 <h3 id="drugsTotal">Drugs Total: 0</h3>
 <h3 id="grandTotal">Total: 0</h3>
-<label style="display:block; margin:10px 0; color:red">
-   Do NOT update drugs stock <input type="checkbox" id="skipStockCheck">
-</label> 
+<label class="stock-toggle">
+   Do NOT update drugs stock
+   <input type="checkbox" id="skipStockCheck">
+</label>
 <button onclick="generatePDF()">
 Generate Invoice
 </button>
