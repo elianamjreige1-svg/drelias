@@ -1104,6 +1104,44 @@ async function generatePDF(){
 
     return `${dd}${mm}${yy}${hh}${min}${ss}`;
 }
+
+// create one fake history state
+history.pushState(null,"",location.href);
+
+let leaving = false;
+
+window.addEventListener("popstate", function(){
+
+    if(leaving) return;
+
+    const leave = confirm("Are you sure you want to exit the app ?");
+
+    if(leave){
+
+        leaving = true;
+
+        // clear saved login
+        localStorage.removeItem("username");
+        localStorage.removeItem("password");
+        localStorage.removeItem("autoLogin");
+
+        window.onbeforeunload = null;
+
+        history.back();
+
+    }else{
+
+        history.pushState(null,"",location.href);
+    }
+});
+
+window.onbeforeunload = function(e){
+
+    if(!leaving){
+        e.preventDefault();
+        e.returnValue = '';
+    }
+};
 </script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
