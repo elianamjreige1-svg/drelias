@@ -902,22 +902,21 @@ async function generatePDF(){
     if(!validateStock()){
         return;
     }
-/*
- const consultation =
+
+ const cons =
         Number(document.getElementById("consultationFee").value) || 0;
 
-    let drugsTotal = 0;
+    let dt = 0;
 
     invoiceItems.forEach(item => {
-        drugsTotal += item.price * item.qty;
+        dt += item.price * item.qty;
     });
 
-    // 🚨 BLOCK ONLY IF BOTH ARE ZERO
-    if(consultation <= 0 && drugsTotal <= 0){
-        alert("You must add consultation fee or at least one drug");
+    if (cons === 0 && dt === 0) {
+        alert("Cannot generate an invoice with a total of $0");
         return;
     }
-    */
+    
     const ok = confirm("Generate invoice and update stock?");
     if(!ok){
         return;
