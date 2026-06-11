@@ -913,7 +913,7 @@ async function generatePDF(){
     });
 
     if (cons === 0 && dt === 0) {
-        alert("Cannot generate an invoice with a total of $0");
+        alert("Cannot generate an invoice for $0");
         return;
     }
     
@@ -1104,12 +1104,12 @@ async function generatePDF(){
 
 <input id="consultationFee"
        type="number"
-       placeholder="Consultation Fee"
+       placeholder="Consultation Fee ($)"
        oninput="renderInvoice()">
 
 <input id="discount"
        type="number"
-       placeholder="Discount"
+       placeholder="Discount ($)"
        oninput="renderInvoice()">
 
 <hr>
