@@ -977,15 +977,25 @@ async function generatePDF(){
     // ===== DATE (RIGHT) =====
     const formattedDate = new Date().toLocaleDateString("en-GB");
 
-    pdf.setFontSize(11);
-    pdf.setFont("helvetica", "normal");
+   pdf.setFontSize(11);
 
-    pdf.text(
-        "Date: " + formattedDate,
-        pageWidth - 20,
-        25,
-        { align: "right" }
-    );
+const dateLabel = "Date:";
+const dateValue = " " + formattedDate;
+
+pdf.setFont("helvetica", "bold");
+const dateLabelWidth = pdf.getTextWidth(dateLabel);
+
+pdf.setFont("helvetica", "normal");
+const dateValueWidth = pdf.getTextWidth(dateValue);
+
+const totalDateWidth = dateLabelWidth + dateValueWidth;
+const startX = pageWidth - 20 - totalDateWidth;
+
+pdf.setFont("helvetica", "bold");
+pdf.text(dateLabel, startX, 25);
+
+pdf.setFont("helvetica", "normal");
+pdf.text(dateValue, startX + dateLabelWidth, 25);
 
     // ===== INVOICE NUMBER =====
  //   pdf.text("Invoice #: " + invoiceNumber, 20, 25);
@@ -1000,14 +1010,19 @@ pdf.setFont("helvetica", "normal");
 pdf.text(invoiceNumber, 20 + labelWidth + 2, 25);
 
     // ===== PATIENT =====
-    pdf.setFontSize(13);
-    pdf.setFont("helvetica", "bold");
+pdf.setFontSize(13);
 
-    pdf.text(
-        "Patient: " + selectedPatientName,
-        20,
-        35
-    );
+pdf.setFont("helvetica", "bold");
+pdf.text("Patient:", 20, 35);
+
+const patientLabelWidth = pdf.getTextWidth("Patient:");
+
+pdf.setFont("helvetica", "normal");
+pdf.text(
+    " " + selectedPatientName,
+    20 + patientLabelWidth,
+    35
+);
 
     // ===== CALCULATE =====
     let drugsTotal = 0;
@@ -1067,10 +1082,32 @@ pdf.text(invoiceNumber, 20 + labelWidth + 2, 25);
     pdf.setFontSize(11);
     pdf.setFont("helvetica", "normal");
 
-    pdf.text(`Consultation: $${consultation.toFixed(2)}`, 20, y);
+  pdf.setFont("helvetica", "bold");
+pdf.text("Consultation:", 20, y);
+
+const consultationWidth =
+    pdf.getTextWidth("Consultation:");
+
+pdf.setFont("helvetica", "normal");
+pdf.text(
+    ` $${consultation.toFixed(2)}`,
+    20 + consultationWidth,
+    y
+);
     y += 7;
 
-    pdf.text(`Discount: $${discount.toFixed(2)}`, 20, y);
+  pdf.setFont("helvetica", "bold");
+pdf.text("Discount:", 20, y);
+
+const discountWidth =
+    pdf.getTextWidth("Discount:");
+
+pdf.setFont("helvetica", "normal");
+pdf.text(
+    ` $${discount.toFixed(2)}`,
+    20 + discountWidth,
+    y
+);
     y += 10;
 
     pdf.setFontSize(14);
