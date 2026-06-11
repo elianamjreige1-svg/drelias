@@ -520,8 +520,10 @@ loadPatients();
 }
 
 function closeInvoice(){
-if(confirm("Are you sure you want to close the invoice page?"))
+if(confirm("Are you sure you want to close the invoice page?")){
+    resetInvoiceModal();
     document.getElementById("invoiceModal").style.display="none";
+}
 
 }
 
@@ -732,6 +734,26 @@ function changeQty(index,value){
 
 }
 
+function resetInvoiceModal(){
+
+    // checkbox reset
+    document.getElementById("skipStockCheck").checked = false;
+
+    // search reset
+    document.getElementById("drugSearch").value = "";
+
+    // clear drug results
+    document.getElementById("drugResults").innerHTML = "";
+
+    // reset invoice data
+    invoiceItems = [];
+
+    // reset table + totals
+    document.getElementById("invoiceTable").innerHTML = "";
+    document.getElementById("drugsTotal").innerHTML = "Drugs Total: 0";
+    document.getElementById("grandTotal").innerHTML = "Total: 0";
+}
+    
 function removeDrug(index){
 
     invoiceItems.splice(index,1);
