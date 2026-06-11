@@ -520,7 +520,19 @@ loadPatients();
 }
 
 function closeInvoice(){
-if(confirm("Are you sure you want to close the invoice page?")){
+    let dt = 0;
+    invoiceItems.forEach(item => {
+        dt += item.price * item.qty;
+    });
+
+    const cons =
+        Number(document.getElementById("consultationFee").value) || 0;
+if(cons==0 && dt==0) 
+{
+    document.getElementById("invoiceModal").style.display="none";
+    return;
+}
+if(confirm("Are you sure you want to close the invoice panel?")){
     resetInvoiceModal();
     document.getElementById("invoiceModal").style.display="none";
 }
