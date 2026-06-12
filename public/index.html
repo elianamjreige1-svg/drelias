@@ -1175,7 +1175,7 @@ const totalDateWidth = dateLabelWidth + dateValueWidth;
 const startX = pageWidth - 20 - totalDateWidth;
 
 pdf.setFont("helvetica", "bold");
-pdf.text(dateLabel, startX, 50);
+pdf.text(dateLabel, startX, 40);
 
 pdf.setFont("helvetica", "normal");
 pdf.text(dateValue, startX + dateLabelWidth, 40);
@@ -1185,18 +1185,18 @@ pdf.text(dateValue, startX + dateLabelWidth, 40);
 
     pdf.setFont("helvetica", "bold");
 const label = "Invoice #:";
-pdf.text(label, 20, 50);
+pdf.text(label, 20, 40);
 
 const labelWidth = pdf.getTextWidth(label);
 
 pdf.setFont("helvetica", "normal");
-pdf.text(invoiceNumber, 20 + labelWidth + 2, 50);
+pdf.text(invoiceNumber, 20 + labelWidth + 2, 40);
 
     // ===== PATIENT =====
 pdf.setFontSize(14);
 
 pdf.setFont("helvetica", "bold");
-pdf.text("Patient:", 20, 60);
+pdf.text("Patient:", 20, 50);
 
 const patientLabelWidth = pdf.getTextWidth("Patient:");
 
@@ -1204,7 +1204,7 @@ pdf.setFont("helvetica", "normal");
 pdf.text(
     " " + selectedPatientName,
     20 + patientLabelWidth,
-    60
+    50
 );
 
     // ===== CALCULATE =====
