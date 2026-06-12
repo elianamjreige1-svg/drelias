@@ -1086,9 +1086,37 @@ if(!skipStock){
 
     // ===== INVOICE NUMBER =====
     const invoiceNumber = "INV-" + generateInvoiceNumber();
+const logo = new Image();
+
+logo.onload = function () {
+
+    const pdf = new window.jspdf.jsPDF();
+    const pageWidth = pdf.internal.pageSize.getWidth();
+
+    // ===== LOGO =====
+    pdf.addImage(logo, "PNG", 60, 5, 12, 12);
 
     // ===== TITLE =====
     pdf.setFontSize(24);
+    pdf.setFont("helvetica", "bold");
+
+    pdf.text(
+        "Dr. ELIAS CLINIC",
+        pageWidth / 2 + 8,
+        15,
+        { align: "center" }
+    );
+
+    pdf.line(20, 18, pageWidth - 20, 18);
+
+    // Rest of your existing code here...
+};
+
+logo.src = "drelias.png";
+
+    
+    // ===== TITLE =====
+/*    pdf.setFontSize(24);
     pdf.setFont("helvetica", "bold");
 
     pdf.text(
@@ -1099,7 +1127,7 @@ if(!skipStock){
     );
 
     pdf.line(20, 18, pageWidth - 20, 18);
-
+*/
     // ===== DATE (RIGHT) =====
     const formattedDate = new Date().toLocaleDateString("en-GB");
 
