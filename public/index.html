@@ -1175,22 +1175,22 @@ const totalDateWidth = dateLabelWidth + dateValueWidth;
 const startX = pageWidth - 20 - totalDateWidth;
 
 pdf.setFont("helvetica", "bold");
-pdf.text(dateLabel, startX, 40);
+pdf.text(dateLabel, startX, 45);
 
 pdf.setFont("helvetica", "normal");
-pdf.text(dateValue, startX + dateLabelWidth, 40);
+pdf.text(dateValue, startX + dateLabelWidth, 45);
 
     // ===== INVOICE NUMBER =====
  //   pdf.text("Invoice #: " + invoiceNumber, 20, 25);
 
     pdf.setFont("helvetica", "bold");
 const label = "Invoice #:";
-pdf.text(label, 20, 40);
+pdf.text(label, 20, 45);
 
 const labelWidth = pdf.getTextWidth(label);
 
 pdf.setFont("helvetica", "normal");
-pdf.text(invoiceNumber, 20 + labelWidth + 2, 40);
+pdf.text(invoiceNumber, 20 + labelWidth + 2, 45);
 
     // ===== PATIENT =====
 pdf.setFontSize(14);
