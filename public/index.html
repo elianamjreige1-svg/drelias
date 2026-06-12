@@ -1094,21 +1094,21 @@ await new Promise((resolve, reject) => {
 
     const pageWidth = pdf.internal.pageSize.getWidth();
 // ===== LOGO =====
-pdf.addImage(logo, "PNG", 10, 5, 40, 20);
+pdf.addImage(logo, "PNG", 10, 10, 40, 20);
 
 // ===== TITLE =====
 pdf.setFontSize(24);
 pdf.setFont("helvetica", "bold");
 
 pdf.text(
-    "Dr. ELIAS CLINIC.",
+    "Dr. ELIAS CLINIC",
     pageWidth / 2,
-    15,
+    20,
     { align: "center" }
 );
 
 // ===== MULTIPLE LINES =====
- pdf.line(20, 18, pageWidth - 20, 18);
+ pdf.line(20, 23, pageWidth - 20, 23);
 
     
     // ===== INVOICE NUMBER =====
