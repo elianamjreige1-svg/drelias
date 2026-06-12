@@ -1114,16 +1114,8 @@ logo.onload = function () {
 
 logo.src = "/drelias.png";
 */
-// ===== LOAD LOGO FIRST =====
-const logo = new Image();
-logo.src = "/drelias.png";
-
-await new Promise((resolve) => {
-    logo.onload = resolve;
-});
-
 // ===== LOGO =====
-pdf.addImage(logo, "PNG", 15, 5, 20, 20);
+pdf.addImage(logo, "PNG", 10, 5, 40, 20);
 
 // ===== TITLE =====
 pdf.setFontSize(24);
@@ -1136,8 +1128,10 @@ pdf.text(
     { align: "center" }
 );
 
-// ===== LINE =====
+// ===== MULTIPLE LINES =====
 pdf.line(20, 25, pageWidth - 20, 25);
+pdf.line(20, 27, pageWidth - 20, 27);
+pdf.line(20, 29, pageWidth - 20, 29);
     
   /* 
     // ===== TITLE =====
