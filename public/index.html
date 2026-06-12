@@ -1079,6 +1079,16 @@ if(!skipStock){
         alert("jsPDF is not loaded!");
         return;
     }
+    const logo = new Image();
+logo.src = "/drelias.png";
+
+await new Promise((resolve, reject) => {
+    logo.onload = resolve;
+    logo.onerror = reject;
+});
+
+// NOW create PDF
+
 
     const pdf = new window.jspdf.jsPDF();
 
