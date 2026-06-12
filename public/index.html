@@ -1106,11 +1106,11 @@ pdf.text(
     15,
     { align: "center" }
 );
-
+let y=30;
 // ===== MULTIPLE LINES =====
- pdf.line(20, 18, pageWidth - 20, 18);
-pdf.text("", 20, 28);
-pdf.text("", 20, 35);
+ pdf.line(20, y, pageWidth - 20, y);
+y+=10;
+y+=10;
     
     // ===== INVOICE NUMBER =====
     const invoiceNumber = "INV-" + generateInvoiceNumber();
