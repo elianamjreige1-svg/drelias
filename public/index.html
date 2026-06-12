@@ -1254,7 +1254,7 @@ pdf.text(
     });
 
     // ===== FINAL TOTALS =====
-    let y = pdf.lastAutoTable.finalY + 10;
+    let y = pdf.lastAutoTable.finalY + 15;
 
     const consultation =
         Number(document.getElementById("consultationFee").value) || 0;
@@ -1277,7 +1277,7 @@ pdf.text(
     20 + consultationWidth,
     y
 );
-    y += 7;
+    y += 12;
 
   pdf.setFont("helvetica", "bold");
 pdf.text("Discount:", 20, y);
@@ -1291,7 +1291,7 @@ pdf.text(
     20 + discountWidth,
     y
 );
-    y += 10;
+    y += 15;
 
     pdf.setFontSize(14);
     pdf.setFont("helvetica", "bold");
