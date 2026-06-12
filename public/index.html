@@ -1108,9 +1108,9 @@ pdf.text(
 );
 
 // ===== MULTIPLE LINES =====
-pdf.line(20, 25, pageWidth - 20, 25);
-pdf.line(20, 27, pageWidth - 20, 27);
-pdf.line(20, 29, pageWidth - 20, 29);
+ let y=25;
+    y+=10;
+    y+=10;
     
     // ===== INVOICE NUMBER =====
     const invoiceNumber = "INV-" + generateInvoiceNumber();
