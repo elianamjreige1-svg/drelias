@@ -1114,7 +1114,32 @@ logo.onload = function () {
 
 logo.src = "/drelias.png";
 */
-   
+// ===== LOAD LOGO FIRST =====
+const logo = new Image();
+logo.src = "/drelias.png";
+
+await new Promise((resolve) => {
+    logo.onload = resolve;
+});
+
+// ===== LOGO =====
+pdf.addImage(logo, "PNG", 15, 5, 20, 20);
+
+// ===== TITLE =====
+pdf.setFontSize(24);
+pdf.setFont("helvetica", "bold");
+
+pdf.text(
+    "Dr. ELIAS CLINIC.",
+    pageWidth / 2,
+    15,
+    { align: "center" }
+);
+
+// ===== LINE =====
+pdf.line(20, 25, pageWidth - 20, 25);
+    
+  /* 
     // ===== TITLE =====
    pdf.setFontSize(24);
     pdf.setFont("helvetica", "bold");
@@ -1126,7 +1151,7 @@ logo.src = "/drelias.png";
         { align: "center" }
     );
 
-    pdf.line(20, 18, pageWidth - 20, 18);
+    pdf.line(20, 18, pageWidth - 20, 18);*/
 
     // ===== DATE (RIGHT) =====
     const formattedDate = new Date().toLocaleDateString("en-GB");
