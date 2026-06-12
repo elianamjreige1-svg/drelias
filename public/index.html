@@ -1083,7 +1083,25 @@ if(!skipStock){
     const pdf = new window.jspdf.jsPDF();
 
     const pageWidth = pdf.internal.pageSize.getWidth();
+// ===== LOGO =====
+pdf.addImage(logo, "PNG", 10, 5, 40, 20);
 
+// ===== TITLE =====
+pdf.setFontSize(24);
+pdf.setFont("helvetica", "bold");
+
+pdf.text(
+    "Dr. ELIAS CLINIC.",
+    pageWidth / 2,
+    15,
+    { align: "center" }
+);
+
+// ===== MULTIPLE LINES =====
+pdf.line(20, 25, pageWidth - 20, 25);
+pdf.line(20, 27, pageWidth - 20, 27);
+pdf.line(20, 29, pageWidth - 20, 29);
+    
     // ===== INVOICE NUMBER =====
     const invoiceNumber = "INV-" + generateInvoiceNumber();
 /*const logo = new Image();
@@ -1114,24 +1132,7 @@ logo.onload = function () {
 
 logo.src = "/drelias.png";
 */
-// ===== LOGO =====
-pdf.addImage(logo, "PNG", 10, 5, 40, 20);
 
-// ===== TITLE =====
-pdf.setFontSize(24);
-pdf.setFont("helvetica", "bold");
-
-pdf.text(
-    "Dr. ELIAS CLINIC.",
-    pageWidth / 2,
-    15,
-    { align: "center" }
-);
-
-// ===== MULTIPLE LINES =====
-pdf.line(20, 25, pageWidth - 20, 25);
-pdf.line(20, 27, pageWidth - 20, 27);
-pdf.line(20, 29, pageWidth - 20, 29);
     
   /* 
     // ===== TITLE =====
